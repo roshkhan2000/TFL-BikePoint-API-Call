@@ -24,5 +24,4 @@ if (response.status_code) == 200:
         print(f"File {file_name} was successfully created!")
 # otherwise throw the below error
 else:
-    error_message = data.get("message", "no message given")
-    print(f"Error creating files: {response.status_code} {error_message}")
+    print(f"Error creating files: {response.status_code}")
