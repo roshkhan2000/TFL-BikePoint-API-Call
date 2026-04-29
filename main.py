@@ -3,32 +3,26 @@ import requests as r
 import json 
 import datetime as dt
 
-# allow user to input a Bikepoints ID number
-insert_id = input("Insert Bikepoints ID (in number)")
-
 # set variables for api call and make that call using get
-id = f"Bikepoints_{insert_id}"
-url = f"https://api.tfl.gov.uk/BikePoint/{id}"
+url = f"https://api.tfl.gov.uk/BikePoint"
 response = r.get(url)
-
-#set the ime to be now and create file namne using time
-time = dt.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-file_name = f"{id}_{time}.json"
-
-# convert response to json
-data = response.json()
 
 # error handling
 if (response.status_code) == 200:
-    # convert response to json
+    # if response is 200 then convert response to json
     data = response.json()
-    # create a json file in my folder
-    # the w specifies that if a file does not exist, then create it, otherwise just open it
-    # then dump the data resposne in to that file
-    with open(file_name, "w") as file:
-        json.dump(data, file)
-    print(f"File {file_name} was successfully created!")
+    # for each dictionary in the list, get current time
+    # also, get the name of the BikePoint using record.get("id")
+    for record in data:
+        time = dt.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        file_name = f"{record.get("id")}_{time}.json"
+        # create a json file in my folder
+        # the w specifies that if a file does not exist, then create it, otherwise just open it
+        # then dump the data resposne in to that file
+        with open(file_name, "w") as file:
+            json.dump(record, file)
+        print(f"File {file_name} was successfully created!")
 # otherwise throw the below error
 else:
     error_message = data.get("message", "no message given")
-    print(f"Error creating {file_name}: {response.status_code} {error_message}")
+    print(f"Error creating files: {response.status_code} {error_message}")
