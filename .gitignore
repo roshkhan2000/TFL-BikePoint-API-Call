@@ -1,3 +1,4 @@
-*.env
-*.json
+.env
+.json
 .venv
+BikePoints_JSON_Files/*
