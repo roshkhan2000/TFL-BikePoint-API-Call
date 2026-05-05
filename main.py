@@ -1,37 +1,62 @@
-# import libraries and modules
+# import libs
 import requests as r
 import json 
 import datetime as dt
 import os
+import time
+import logging
 
-# get current directory and folder to save files to 
-current_directory = os.getcwd()
-folder = os.path.join(current_directory, "BikePoints_JSON_Files")
-# make sure the folder exists
-os.makedirs(folder, exist_ok=True)
+# create a logging config, directory, and timestamp
+log_dir = f"{os.getcwd()}/logs"
+os.makedirs(log_dir, exist_ok=True)
+timestamp = dt.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+log_filename = f"{log_dir}/{timestamp}.log"
 
-# set variables for api call and make that call using get
-url = f"https://api.tfl.gov.uk/BikePoint"
+logging.basicConfig(
+    filename=log_filename,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
+
+logger = logging.getLogger()
+logger.info('Logger Initialised')
+
+# create folder to save files to 
+folder = os.path.join(os.getcwd(), "JSON_Files")
+
+# set url for API and make the call
+# store the status of the API call
+url = f"https://api.tfl.gov.uk/BikePoint/"
 response = r.get(url)
+response_code = response.status_code
 
-# error handling
-if (response.status_code) == 200:
-    # if response is 200 then convert response to json
-    data = response.json()
+# create vars for API call retry (if it fails)
+count = 0 
+max_tries = 3
 
-    # for each dictionary in the list, get current time
-    # also, get the name of the BikePoint using record.get("id")
-    for record in data:
-        time = dt.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        file_name = f"{record.get("id")}_{time}.json"
+while count < max_tries:
+    # if response is within the 200s then do the following
+    if 200 <= response_code < 300:
+
+        # convert API respoinse to JSON
+        data = response.json()
+        # create a folder (if it doesn't exist already) and file to save 
+        os.makedirs(folder, exist_ok=True)
+        file_name = f"{timestamp}.json"
         
-        # create a json file in my folder
-        # the w specifies that if a file does not exist, then create it, otherwise just open it
-        # then dump the data resposne in to that file
+        # open the file and dump the data to it
         with open(os.path.join(folder,file_name), "w") as file:
-            json.dump(record, file)
-        print(f"File {file_name} was successfully created!")
+            json.dump(data, file)
+        logger.info(f"{file_name} was successfully created!")
+        break
 
-# otherwise throw the below error
-else:
-    print(f"Error creating files: {response.status_code}")
+    # if respionse code is in the 500s then retry the API call
+    elif response_code >= 500:
+        time.sleep(10)
+        logger.info(f"Response {response_code}: Trying again.. Attempt {count}")
+        count += 1
+
+    # if response code is not in the 200s, then print an error message
+    else:
+        logger.error(f"Error creating files: {response_code}")
+        break
