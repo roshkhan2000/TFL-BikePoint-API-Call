@@ -4,3 +4,4 @@
 BikePoints_JSON_Files/*
 logs/*
 *.log
+.venv/*
