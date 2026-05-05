@@ -10,7 +10,7 @@ import logging
 log_dir = f"{os.getcwd()}/logs"
 os.makedirs(log_dir, exist_ok=True)
 timestamp = dt.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-log_filename = f"{log_dir}/{timestamp}.log"
+log_filename = f"{log_dir}/extract_{timestamp}.log"
 
 logging.basicConfig(
     filename=log_filename,
