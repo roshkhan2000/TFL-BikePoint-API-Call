@@ -4,7 +4,8 @@ import datetime as dt
 
 def setup_logging(log_dir):
     """
-    this function sets up the logging for all modules- less repetiton setting up logs
+    This function sets up the logging for all modules- less repetiton setting up logs
+    
     Args:
         log_dir (string): the filepath that you want the logs file to sit in
 
