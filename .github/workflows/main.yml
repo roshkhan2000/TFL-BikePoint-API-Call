@@ -1,0 +1,29 @@
+name: bikepoint-ingestion
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: bikepoint-ingestion
+    steps:
+      - name: checkout-the-repo
+        uses: actions/checkout@v2
+
+      - name: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: install-packages
+        run: pip install -r requirements.txt
+
+      - name: run-script
+        env:
+          AWS_ACCESS_KEY:  ${{secrets.AWS_ACCESS_KEY}}
+          AWS_SECRET_KEY:  ${{secrets.AWS_SECRET_KEY}}
+          bucket:  ${{secrets.bucket}}
+        run: python main.py
