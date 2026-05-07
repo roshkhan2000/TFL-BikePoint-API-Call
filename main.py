@@ -10,7 +10,7 @@ logger.info('Logger Initialised')
 
 load_dotenv()
 aws_access_key = os.getenv("AWS_ACCESS_KEY")
-aws_access_key = os.getenv("AWS_SECRET_KEY")
+aws_secret_key = os.getenv("AWS_SECRET_KEY")
 bucket= os.getenv("bucket")
 
 url = f"https://api.tfl.gov.uk/BikePoint/"
@@ -19,7 +19,7 @@ if extract(url, 3, 'JSON_Files'):
     logger.info('Extract ran successfully')
     dir_to_upload = f"{os.getcwd()}/JSON_Files"
 
-    load(aws_access_key, aws_access_key, bucket, dir_to_upload)
+    load(aws_access_key, aws_secret_key, bucket, dir_to_upload)
     logger.info('Extract and Load ran successfully')
 else:
     logger.error("Extract failed so load did not run")
