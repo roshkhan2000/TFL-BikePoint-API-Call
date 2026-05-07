@@ -22,7 +22,7 @@ logger = logging.getLogger()
 logger.info('Logger Initialised')
 
 # create folder to save files to 
-folder = os.path.join(os.getcwd(), "JSON_Files")
+dir = os.path.join(os.getcwd(), "JSON_Files")
 
 # set url for API and make the call
 # store the status of the API call
@@ -41,11 +41,11 @@ while count < max_tries:
         # convert API respoinse to JSON
         data = response.json()
         # create a folder (if it doesn't exist already) and file to save 
-        os.makedirs(folder, exist_ok=True)
+        os.makedirs(dir, exist_ok=True)
         file_name = f"{timestamp}.json"
         
         # open the file and dump the data to it
-        with open(os.path.join(folder,file_name), "w") as file:
+        with open(os.path.join(dir,file_name), "w") as file:
             json.dump(data, file)
         logger.info(f"{file_name} was successfully created!")
         break
