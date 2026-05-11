@@ -22,14 +22,14 @@ CREATE STAGE *stage_name*
 LIST @b*stage_name*;
 
 // Create an empty table with two columns
-CREATE OR REPLACE TABLE *table_name*
+CREATE OR REPLACE TABLE *raw_table_name*
     (
     json VARIANT
     , filename STRING
     );
 
 // Copy data from stage into this empty table
-COPY INTO *table_name*
+COPY INTO *raw_table_name*
 FROM (
     SELECT
     $1
@@ -43,7 +43,7 @@ STRIP_OUTER_ARRAY = TRUE
 
 // Select * the data in the table 
 SELECT *
-FROM *table_name*
+FROM *raw_table_name*
 
 // To empty table (if needed)
-TRUNCATE TABLE *table_name*
+TRUNCATE TABLE *raw_table_name*
