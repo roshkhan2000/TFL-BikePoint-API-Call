@@ -1,8 +1,5 @@
--- ======================================================================================
--- STAGE 1: BASE TABLE (The "Cleaning" Layer)
--- Flattens JSON, pivots properties, and casts data types.
--- ======================================================================================
-CREATE OR REPLACE TABLE *base_layer_name* AS (
+// Flatten JSON, pivot properties, and casts data types
+CREATE OR REPLACE TABLE bikepoint_des6_rk_table_base AS (
 
     -- CTE 1: Extract core fields and handle the filename-based timestamp
     WITH json_parse1 AS (
@@ -14,7 +11,7 @@ CREATE OR REPLACE TABLE *base_layer_name* AS (
             , json:additionalProperties::Variant AS additional_properties
             -- Extracting date from filename (e.g., '2026-05-04_12-00-00.json')
             , to_timestamp(REPLACE(filename, '.json', ''), 'yyyy-mm-dd_hh-mi-ss') AS extract_timestamp
-        FROM *raw_table_name*
+        FROM bikepoint_des6_rk_table_raw
     )
     
     -- CTE 2: Flatten the 'additionalProperties' array into Key/Value rows
@@ -60,50 +57,4 @@ CREATE OR REPLACE TABLE *base_layer_name* AS (
         'Installed', 'Locked', 'InstallDate', 'RemovalDate', 
         'Temporary', 'NbEmptyDocks', 'NbDocks', 'NbStandardBikes', 'NbEBikes'
     ))
-);
-
--- ======================================================================================
--- STAGE 2: FACT TABLE (The "Metrics" Layer)
--- Stores quantitative data that changes over time (bike/dock availability).
--- ======================================================================================
-CREATE OR REPLACE TABLE *silver_layer_fact* AS (
-    SELECT 
-        bike_point_id      -- FK to Dimension
-        , extract_timestamp -- Time of the snapshot
-        , nb_empty_docks
-        , nb_e_bikes
-        , nb_standard_bikes
-    FROM *silver_layer_name*
-);
-
--- ======================================================================================
--- STAGE 3: DIMENSION TABLE (The "Context" Layer)
--- Stores descriptive attributes of the BikePoints. 
--- Includes valid_from for Slowly Changing Dimension (SCD) tracking.
--- ======================================================================================
-CREATE OR REPLACE TABLE *silver_layer_dim* AS (
-    SELECT 
-        bike_point_id      -- Primary Key
-        , lat
-        , lon
-        , common_name
-        , nb_docks
-        , installed
-        , locked
-        , install_date
-        , removal_date
-        -- Tracking when this specific configuration was last modified
-        , MIN(modified) AS valid_from
-        , NULL AS valid_to
-    FROM bikepoint_des6_rk_table_base
-    GROUP BY
-        bike_point_id
-        , lat
-        , lon
-        , common_name      
-        , nb_docks
-        , installed
-        , locked
-        , install_date
-        , removal_date
 );
