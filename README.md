@@ -22,7 +22,7 @@ TfL BikePoint API     ◄──── extract_and_load.py  ◄──── GitHu
                        │     ◄──── Stored Procedure  ◄──── Snowflake Task
                        ▼
                   Base Table     
-                 /           \   ◄──── Stored Procedure  ◄──── Snowflake Task
+                 /           \     ◄──── Stored Procedure  ◄──── Snowflake Task
                 ▼             ▼
           Fact Table    Dimension Table
          (snapshots)      (SCD Type 2)
