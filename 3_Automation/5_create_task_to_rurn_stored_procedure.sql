@@ -1,4 +1,4 @@
-// create an task to run the procedure on schedule
+// create a task to run the procedure on schedule
 CREATE TASK bikepoint_des6_rk_task
 WAREHOUSE = dataschool_wh
 SCHEDULE = '1 minute'
