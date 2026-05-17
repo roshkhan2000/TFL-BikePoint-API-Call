@@ -7,26 +7,19 @@ An end-to-end pipeline ingesting real-time London bike-share data from the TfL A
 ## Architecture
 
 ```
-TfL BikePoint API
+TfL BikePoint API     ◄──── extract_and_load.py  ◄──── GitHub Actions (OR Manual run)
         │
         ▼
-extract_and_load.py  ◄──── GitHub Actions
-        │
+  AWS S3 Bucket     ◄──── Snowpipe (SQS notification)
+        │ 
         ▼
-  AWS S3 Bucket
-        │  (SQS notification)
+   Raw Table
+        │ 
         ▼
-     Snowpipe
-        │
-        ▼
-   Raw Table ──► Snowflake Stream
-                       │
-                 Snowflake Task
-                       │
-                Stored Procedure
+        Snowflake Stream     ◄──── Stored Procedure  ◄──── Snowflake Task
                        │
                        ▼
-                  Base Table
+                  Base Table     ◄──── Stored Procedure  ◄──── Snowflake Task
                  /           \
                 ▼             ▼
           Fact Table    Dimension Table
