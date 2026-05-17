@@ -3,7 +3,7 @@ CREATE STORAGE INTEGRATION bikepoint_des6_rk_storage_integration
   TYPE = EXTERNAL_STAGE
   STORAGE_PROVIDER = S3
   ENABLED = TRUE
-  STORAGE_AWS_ROLE_ARN = *'insert_aws_iam_arn*'
+  STORAGE_AWS_ROLE_ARN = *'insert_aws_iam_arn*'*
   STORAGE_ALLOWED_LOCATIONS = (*'insert_s3_buclet_url'*);
 // Describe the integration to get IAM USER ARN & External ID values from the integration
 DESC INTEGRATION bikepoint_des6_rk_storage_integration;
