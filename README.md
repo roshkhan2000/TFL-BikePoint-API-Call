@@ -11,7 +11,9 @@ TfL BikePoint API     ◄──── extract_and_load.py  ◄──── GitHu
         │
         ▼
   AWS S3 Bucket     
-        │           ◄──── Snowpipe (SQS notification)
+        │
+ Snowflake Stage     ◄──── Snowpipe (SQS notification)
+        │
         ▼
    Raw Table
         │ 
