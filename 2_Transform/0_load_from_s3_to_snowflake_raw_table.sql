@@ -7,7 +7,7 @@ CREATE STORAGE INTEGRATION bikepoint_des6_rk_storage_integration
   STORAGE_ALLOWED_LOCATIONS = (*'insert_s3_buclet_url'*);
 // Describe the integration to get IAM USER ARN & External ID values from the integration
 DESC INTEGRATION bikepoint_des6_rk_storage_integration;
-// Input these values in the 'Trust Realtionship' part of IAM role
+// Input these values in the 'Trust Realtionship' part of IAM role in AWS
 
 // Create an external stage in Snowflake
 CREATE STAGE @bikepoint_des6_rk_external_stage;
